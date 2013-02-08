@@ -39,56 +39,48 @@ def config_error():
     print_error("Cannot find warnup configuration file in your current working directory (.warnup)")
     sys.exit(1)
 
-def run_diff():
+def run_diff(rel_path):
     config = get_config()
 
     if(config == None):
         config_error()
 
-    if(len(sys.argv) < 3):
-        print_error("File not specified")
-        return
-
     # Get the paths
     development = config.get("paths", "development")
     production = config.get("paths", "production")
-    dev_path = os.path.join(development, sys.argv[2])
-    prod_path = os.path.join(production, sys.argv[2])
+    dev_path = os.path.join(development, rel_path)
+    prod_path = os.path.join(production, rel_path)
 
     if(os.path.exists(dev_path) == False):
-        print_error("File %s cannot be found on development" % sys.argv[2])
+        print_error("File %s cannot be found on development" % rel_path)
         return
 
     if(os.path.exists(prod_path) == False):
-        print_notice("File %s does not exist on production" % sys.argv[2])
-        print("Try:\n  $ warnup push %s" % sys.argv[2])
+        print_notice("File %s does not exist on production" % rel_path)
+        print("Try:\n  $ warnup push %s" % rel_path)
         return
 
     subprocess.call(["meld", dev_path, prod_path])
 
-def run_push():
+def run_push(rel_path):
     config = get_config()
 
     if(config == None):
         config_error()
 
-    if(len(sys.argv) < 3):
-        print_error("File not specified")
-        return
-
     # Get the paths
     development = config.get("paths", "development")
     production = config.get("paths", "production")
-    dev_path = os.path.join(development, sys.argv[2])
-    prod_path = os.path.join(production, sys.argv[2])
+    dev_path = os.path.join(development, rel_path)
+    prod_path = os.path.join(production, rel_path)
 
     if(os.path.exists(dev_path) == False):
-        print_error("File %s cannot be found on development" % sys.argv[2])
+        print_error("File %s cannot be found on development" % rel_path)
         return
 
     if(os.path.exists(prod_path) == False):
-        print_notice("File %s does not exist on production" % sys.argv[2])
-        print("Try:\n  $ warnup push %s" % sys.argv[2])
+        print_notice("File %s does not exist on production" % rel_path)
+        print("Try:\n  $ warnup push %s" % rel_path)
         return
 
     # Get a temporary path
@@ -99,7 +91,7 @@ def run_push():
     print_notice("Creating backup at %s" % temp_path)
     subprocess.call(["mv", prod_path, temp_path])
     subprocess.call(["cp", dev_path, prod_path])
-    print_success("%s successfully pushed" % sys.argv[2])
+    print_success("%s successfully pushed" % rel_path)
 
     ans = raw_input("\nWould you like to save, delete, or restore the backup file? (s/d/r) ")
     if(ans == "d"):
@@ -109,7 +101,7 @@ def run_push():
     elif(ans == "r"):
         subprocess.call(["rm", prod_path])
         subprocess.call(["mv", temp_path, prod_path])
-        print_success("%s has been restored to its original state" % sys.argv[2])
+        print_success("%s has been restored to its original state" % rel_path)
 
     elif(ans == "s"):
         split = list(os.path.split(dev_path))
@@ -124,9 +116,19 @@ def main():
     if(len(sys.argv) == 1):
         show_help()
     elif(sys.argv[1] == "diff"):
-        run_diff()
+        if(len(sys.argv) < 3):
+            print_error("File not specified")
+            return
+
+        run_diff(sys.argv[2])
     elif(sys.argv[1] == "push"):
-        run_push()
+        if(len(sys.argv) < 3):
+            print_error("File not specified")
+            return
+
+        run_push(sys.argv[2])
+    else:
+        show_help()
 
 
 if __name__ == "__main__":
