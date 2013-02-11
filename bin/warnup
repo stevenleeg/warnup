@@ -36,16 +36,7 @@ def config_error():
     sys.exit(1)
 
 def run_diff(rel_path):
-    config = warnup.get_config()
-
-    if(config == None):
-        config_error()
-
-    # Get the paths
-    development = config.get("paths", "development")
-    production = config.get("paths", "production")
-    dev_path = os.path.join(development, rel_path)
-    prod_path = os.path.join(production, rel_path)
+    dev_path, prod_path, temp_path = warnup.get_paths(rel_path)
 
     if(os.path.exists(dev_path) == False):
         print_error("File %s cannot be found on development" % rel_path)
@@ -58,16 +49,7 @@ def run_diff(rel_path):
     subprocess.call(["meld", dev_path, prod_path])
 
 def run_push(rel_path):
-    config = warnup.get_config()
-
-    if(config == None):
-        config_error()
-
-    # Get the paths
-    development = config.get("paths", "development")
-    production = config.get("paths", "production")
-    dev_path = os.path.join(development, rel_path)
-    prod_path = os.path.join(production, rel_path)
+    dev_path, prod_path, temp_path = warnup.get_paths(rel_path)
 
     if(os.path.exists(dev_path) == False):
         print_error("File %s cannot be found on development" % rel_path)
