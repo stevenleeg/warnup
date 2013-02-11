@@ -10,6 +10,26 @@ def get_config():
 
     return config
 
+def get_paths(path):
+    """
+    Returns a tuple with the development path, production path,
+    and temporary path from the given argument path
+    """
+    config = get_config()
+
+    # Get the paths
+    development = config.get("paths", "development")
+    production = config.get("paths", "production")
+    dev_path = os.path.join(development, path)
+    prod_path = os.path.join(production, path)
+
+    # Get a temporary path
+    split = list(os.path.split(prod_path))
+    split[-1] += ".temp"
+    temp_path = os.path.join(split[0], split[1])
+
+    return (dev_path, prod_path, temp_path)
+
 def get_staged():
     config = get_config()
 
@@ -55,54 +75,20 @@ def unstage(path):
     return True
 
 def push(path):
-    config = get_config()
+    dev_path, prod_path, temp_path = get_paths(path)
 
-    # Get the paths
-    development = config.get("paths", "development")
-    production = config.get("paths", "production")
-    dev_path = os.path.join(development, path)
-    prod_path = os.path.join(production, path)
-
-    # Get a temporary path
-    split = list(os.path.split(prod_path))
-    split[-1] += ".temp"
-    temp_path = os.path.join(split[0], split[1])
-
-    print("prod: " + prod_path)
     if os.path.exists(prod_path):
         subprocess.call(["mv", prod_path, temp_path])
     subprocess.call(["cp", dev_path, prod_path])
 
 def backup_restore(path):
-    config = get_config()
-
-    # Get the paths
-    development = config.get("paths", "development")
-    production = config.get("paths", "production")
-    dev_path = os.path.join(development, path)
-    prod_path = os.path.join(production, path)
-
-    # Get a temporary path
-    split = list(os.path.split(prod_path))
-    split[-1] += ".temp"
-    temp_path = os.path.join(split[0], split[1])
+    dev_path, prod_path, temp_path = get_paths(path)
 
     subprocess.call(["rm", prod_path])
     subprocess.call(["mv", temp_path, prod_path])
 
 def backup_save(path):
-    config = get_config()
-
-    # Get the paths
-    development = config.get("paths", "development")
-    production = config.get("paths", "production")
-    dev_path = os.path.join(development, path)
-    prod_path = os.path.join(production, path)
-
-    # Get a temporary path
-    split = list(os.path.split(prod_path))
-    split[-1] += ".temp"
-    temp_path = os.path.join(split[0], split[1])
+    dev_path, prod_path, temp_path = get_paths(path)
 
     split = list(os.path.split(dev_path))
     datestr = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -111,17 +97,6 @@ def backup_save(path):
     subprocess.call(["mv", temp_path, save_path])
 
 def backup_delete(path):
-    config = get_config()
-
-    # Get the paths
-    development = config.get("paths", "development")
-    production = config.get("paths", "production")
-    dev_path = os.path.join(development, path)
-    prod_path = os.path.join(production, path)
-
-    # Get a temporary path
-    split = list(os.path.split(prod_path))
-    split[-1] += ".temp"
-    temp_path = os.path.join(split[0], split[1])
+    dev_path, prod_path, temp_path = get_paths(path)
 
     subprocess.call(["rm", temp_path])
