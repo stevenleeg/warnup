@@ -15,9 +15,12 @@ def show_help():
     print("Warnup usage:")
     print("  warnup [action] [arguments]\n")
     print("Actions:")
-    print("  push [file] - Deploys file into production path")
-    print("  diff [file] - Shows a diff between the local/production versions")
-    print("  stage [file] - Stages a file for a bulk push")
+    print("  push [file]    - Deploys file into production path")
+    print("  push           - Deploys the current stage")
+    print("  diff [file]    - Shows a diff between the local/production versions")
+    print("  stage [file]   - Stages a file for a bulk push")
+    print("  unstage [file] - Removes a file from the current stage")
+    print("  stage          - Displays a list of files currently staged")
 
 def print_error(message):
     print(colorize("[error]", 0xff0000) + " %s" % message)
@@ -159,6 +162,35 @@ def run_show_stage():
     for path in staged:
         print("   " + colorize(path, 0xffff00))
 
+def run_push_stage():
+    staged = warnup.get_staged()
+
+    if(len(staged) == 0):
+        print_error("Nothing staged!")
+        return
+
+    run_show_stage()
+    confirm = raw_input("Are you sure you would like to push these changes? (y/N)")
+    if(confirm != "y"):
+        print("Stage push cancelled. Exiting!");
+        return
+
+    for path in staged:
+        warnup.push(path)
+
+    print_success("Stage successfully pushed!\n")
+    warnup.save_staged([])
+
+    for path in staged:
+        ans = raw_input("%s - Would you like to save, delete, or restore the backup file? (s/d/r) " % colorize(path, 0xffff00))
+
+        if(ans == "r"):
+            warnup.backup_restore(path)
+        elif(ans == "d"):
+            warnup.backup_delete(path)
+        elif(ans == "s"):
+            warnup.backup_save(path)
+
 def main():
     # Check the action
     if(len(sys.argv) == 1):
@@ -170,7 +202,7 @@ def main():
         run_diff(sys.argv[2])
     elif(sys.argv[1] == "push"):
         if(len(sys.argv) < 3):
-            print_error("File not specified")
+            run_push_stage()
             return
         run_push(sys.argv[2])
     elif(sys.argv[1] == "stage"):

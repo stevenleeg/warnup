@@ -1,4 +1,4 @@
-import os, ConfigParser, pickle
+import os, ConfigParser, pickle, subprocess, datetime
 
 def get_config():
     working_dir = os.getcwd()
@@ -54,3 +54,74 @@ def unstage(path):
     save_staged(staged)
     return True
 
+def push(path):
+    config = get_config()
+
+    # Get the paths
+    development = config.get("paths", "development")
+    production = config.get("paths", "production")
+    dev_path = os.path.join(development, path)
+    prod_path = os.path.join(production, path)
+
+    # Get a temporary path
+    split = list(os.path.split(prod_path))
+    split[-1] += ".temp"
+    temp_path = os.path.join(split[0], split[1])
+
+    print("prod: " + prod_path)
+    if os.path.exists(prod_path):
+        subprocess.call(["mv", prod_path, temp_path])
+    subprocess.call(["cp", dev_path, prod_path])
+
+def backup_restore(path):
+    config = get_config()
+
+    # Get the paths
+    development = config.get("paths", "development")
+    production = config.get("paths", "production")
+    dev_path = os.path.join(development, path)
+    prod_path = os.path.join(production, path)
+
+    # Get a temporary path
+    split = list(os.path.split(prod_path))
+    split[-1] += ".temp"
+    temp_path = os.path.join(split[0], split[1])
+
+    subprocess.call(["rm", prod_path])
+    subprocess.call(["mv", temp_path, prod_path])
+
+def backup_save(path):
+    config = get_config()
+
+    # Get the paths
+    development = config.get("paths", "development")
+    production = config.get("paths", "production")
+    dev_path = os.path.join(development, path)
+    prod_path = os.path.join(production, path)
+
+    # Get a temporary path
+    split = list(os.path.split(prod_path))
+    split[-1] += ".temp"
+    temp_path = os.path.join(split[0], split[1])
+
+    split = list(os.path.split(dev_path))
+    datestr = datetime.datetime.now().strftime("%Y-%m-%d")
+    split[-1] += ".%s.backup" % datestr
+    save_path = os.path.join(split[0], split[1])
+    subprocess.call(["mv", temp_path, save_path])
+
+def backup_delete(path):
+    config = get_config()
+
+    # Get the paths
+    development = config.get("paths", "development")
+    production = config.get("paths", "production")
+    dev_path = os.path.join(development, path)
+    prod_path = os.path.join(production, path)
+
+    # Get a temporary path
+    split = list(os.path.split(prod_path))
+    split[-1] += ".temp"
+    temp_path = os.path.join(split[0], split[1])
+
+    subprocess.call(["rm", temp_path])
