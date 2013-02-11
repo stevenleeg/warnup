@@ -173,9 +173,17 @@ def run_push_stage():
             warnup.backup_save(path)
 
 def main():
-    # Check the action
     if(len(sys.argv) == 1):
         show_help()
+        return
+    elif(sys.argv[1] == "help"):
+        show_help()
+        return
+
+    # From this point on, we'll need a config file to do anything
+    working_dir = os.getcwd()
+    if(os.path.exists(os.path.join(working_dir, ".warnup")) is False):
+        print_error("Could not find a config file (.warnup) in your current working directory. Exiting!")
     elif(sys.argv[1] == "diff"):
         if(len(sys.argv) < 3):
             print_error("File not specified")
@@ -197,6 +205,7 @@ def main():
             return
         run_unstage(sys.argv[2])   
     else:
+        show_error("Command not found!")
         show_help()
 
 if __name__ == "__main__":
