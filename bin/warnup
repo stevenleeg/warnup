@@ -53,7 +53,6 @@ def run_diff(rel_path):
 
     if(os.path.exists(prod_path) == False):
         print_notice("File %s does not exist on production" % rel_path)
-        print("Try:\n  $ warnup push %s" % rel_path)
         return
 
     subprocess.call(["meld", dev_path, prod_path])
