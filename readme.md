@@ -54,7 +54,7 @@ And that's it! Warnup should be good to go.
 
 ```bash
 $ warnup diff news/index.php
-[Check diff to make sure it looks good]
+# Check diff to make sure it looks good
 $ warnup push news/index.php
 ```
 
@@ -63,9 +63,9 @@ $ warnup push news/index.php
 ```bash
 $ warnup diff news/index.php
 $ warnup diff test.php
-[Both diffs look good]
+# Both diffs look good]
 $ warnup stage news/index.pgp
 $ warnup stage test.php
 $ warnup push
-[Both files are now in production!]
+# Both files are now in production!
 ```
