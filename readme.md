@@ -13,20 +13,26 @@ If you have `pip`, installing warnup is as simple as:
 
 Next you'll need to create a simple configuration file in your development environment:
 
-    $ cd /path/to/development
-    $ vim .warnup
+```bash
+$ cd /path/to/development
+$ vim .warnup
+```
 
 The configuration format is:
 
-    [paths]
-    development = /path/to/development
-    production  = /path/to/production
+```ini
+[paths]
+development = /path/to/development
+production  = /path/to/production
+```
 
 Example `.warnup`:
 
-    [paths]
-    development = /home/steve/mysite
-    production  = /var/www/mysite
+```ini
+[paths]
+development = /home/steve/mysite
+production  = /var/www/mysite
+```
 
 And that's it! Warnup should be good to go.
 
@@ -46,16 +52,20 @@ And that's it! Warnup should be good to go.
 
 ## Pushing a file to production
 
-    $ warnup diff news/index.php
-    [Check diff to make sure it looks good]
-    $ warnup push news/index.php
+```bash
+$ warnup diff news/index.php
+[Check diff to make sure it looks good]
+$ warnup push news/index.php
+```
 
 ## Pushing multiple files to production
 
-    $ warnup diff news/index.php
-    $ warnup diff test.php
-    [Both diffs look good]
-    $ warnup stage news/index.pgp
-    $ warnup stage test.php
-    $ warnup push
-    [Both files are now in production!]
+```bash
+$ warnup diff news/index.php
+$ warnup diff test.php
+[Both diffs look good]
+$ warnup stage news/index.pgp
+$ warnup stage test.php
+$ warnup push
+[Both files are now in production!]
+```
