@@ -2,9 +2,9 @@
 Warnup is a utility that allows you to compare/work with two directories (in my use case, development and production) easily. It makes it easy to generate diffs and push (and eventually pull) files in bulk between the two.
 
 # Why?
-Sometimes working with large systems doesn't allow you to do things the easiest way (for example: `git push origin master` and bam, instant deployment). I was faced with this issue at my currebt job, and I felt like deploying to production should be easy and painless.
+Sometimes working with large systems doesn't allow you to do things the easiest way (for example: `git push origin master` and bam, instant deployment). I was faced with this issue at my current job, and I felt that deploying to production should be easy and painless.
 
-That's why I've created Warnup. It's an incredibly simple utility that allows you to compare and move code between a development and production environment. This could probably be done with simple shell commands, but I'll taking any excuse for writing python that I can get. 
+That's why I've created Warnup. It's an incredibly simple utility that allows you to compare and move code between a development and production environment. This could probably be done with simple shell commands, but I'll taking any excuse for writing some python that I can get!
 
 # Installation
 If you have `pip`, installing warnup is as simple as:
