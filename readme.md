@@ -59,6 +59,11 @@ And that's it! Warnup should be good to go.
 $ warnup diff news/index.php
 # Check diff to make sure it looks good
 $ warnup push news/index.php
+[notice] Creating backup at /Users/steve/test/prod/news/index.php.temp
+[success] news/index.php successfully pushed
+
+Would you like to save, delete, or restore the backup file? (s/d/r) d
+[success] Backup file deleted
 ```
 
 ## Pushing multiple files to production
@@ -66,9 +71,19 @@ $ warnup push news/index.php
 ```bash
 $ warnup diff news/index.php
 $ warnup diff test.php
-# Both diffs look good]
-$ warnup stage news/index.pgp
+# Both diffs look good
+$ warnup stage news/index.php
+[success] news/index.php successfully staged
 $ warnup stage test.php
+[success] test.php successfully staged
 $ warnup push
+Staged files:  
+   test
+   hello
+Are you sure you would like to push these changes? (y/N) y
+[success] Stage successfully pushed!
+
+test.php - Would you like to save, delete, or restore the backup file? (s/d/r) d
+news/index.php - Would you like to save, delete, or restore the backup file? (s/d/r) d
 # Both files are now in production!
 ```
