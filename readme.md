@@ -18,7 +18,7 @@ $ cd /path/to/development
 $ vim .warnup
 ```
 
-The configuration format is:
+The basic requirement for a configuration file is:
 
 ```ini
 [paths]
@@ -32,6 +32,9 @@ Example `.warnup`:
 [paths]
 development = /home/steve/mysite
 production  = /var/www/mysite
+[utils]
+; Allows you to specify which diff utility to use (I like meld)
+diff=meld
 ```
 
 And that's it! Warnup should be good to go.
