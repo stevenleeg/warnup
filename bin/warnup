@@ -36,6 +36,7 @@ def config_error():
     sys.exit(1)
 
 def run_diff(rel_path):
+    config = warnup.get_config()
     dev_path, prod_path, temp_path = warnup.get_paths(rel_path)
 
     if(os.path.exists(dev_path) == False):
@@ -46,7 +47,12 @@ def run_diff(rel_path):
         print_notice("File %s does not exist on production" % rel_path)
         return
 
-    subprocess.call(["meld", dev_path, prod_path])
+    try:
+        diff_util = config.get("utils", "diff")
+    except ConfigParser.NoSectionError:
+        diff_util = "diff"
+
+    subprocess.call([diff_util, dev_path, prod_path])
 
 def run_push(rel_path):
     dev_path, prod_path, temp_path = warnup.get_paths(rel_path)
