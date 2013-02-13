@@ -61,20 +61,22 @@ def run_push(rel_path):
         print_error("File %s cannot be found on development" % rel_path)
         return
 
-    if(os.path.exists(prod_path) == False):
-        print_notice("File %s does not exist on production" % rel_path)
-        print("Try:\n  $ warnup push %s" % rel_path)
-        return
+    backup = False
+    if(os.path.exists(prod_path)):
+        # Get a temporary path
+        split = list(os.path.split(prod_path))
+        split[-1] += ".temp"
+        temp_path = os.path.join(split[0], split[1])
 
-    # Get a temporary path
-    split = list(os.path.split(prod_path))
-    split[-1] += ".temp"
-    temp_path = os.path.join(split[0], split[1])
+        print_notice("Creating backup at %s" % temp_path)
+        subprocess.call(["mv", prod_path, temp_path])
+        backup = True
 
-    print_notice("Creating backup at %s" % temp_path)
-    subprocess.call(["mv", prod_path, temp_path])
     subprocess.call(["cp", dev_path, prod_path])
     print_success("%s successfully pushed" % rel_path)
+
+    if(backup == False):
+        return
 
     ans = raw_input("\nWould you like to save, delete, or restore the backup file? (s/d/r) ")
     if(ans == "d"):
